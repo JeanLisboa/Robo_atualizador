@@ -1,0 +1,122 @@
+
+  <table class="table table-hover table-striped  " style="position:sticky" cellpadding="2" cellspacing="2">
+
+  <!-- position:sticky serve para manter o cabeçalho fixo -->
+  <tbody>
+  <br>
+
+    <tr class="cab_tabela">
+      <th>Empresa</th>
+      <th>Pedido</th>
+      <th>Data Pedido</th>
+      <th>Ped_Cli</th>
+      <th>Vendedor</th>
+      <th>Regiao</th>
+      <th>Transportador</th>
+      <th>Doc</th>
+      <th>Ser</th>
+      <th>Cliente</th>
+      <th>Destinatario</th>
+      <th>Municipio</th>
+      <th>UF</th>
+      <th>Macro Canal</th>
+
+
+      <th>Curva</th>
+      <th>Volume</th>
+      <th>Peso Bruto</th>
+      <th>Val_Doc</th>
+      <th>Data NF</th>
+      <th>Exped</th>
+      <th>Leadtime</th>
+      <th>Prev Entrega</th>
+      <th>Agend</th>
+      <th>Dt Agenda</th>
+      <th>Dt Reagenda</th>
+      <th>Dta Entrega</th>
+      <th>Status</th>
+      <th>Prazo</th>
+      <th>Obs</th>
+      <th></th>
+    </tr>
+
+      {% for i in relato %}
+      <tr class="width:100%  height:100% table table-hover table-bordered table-striped table-sm table-layout:fixed ">
+
+        <td>{{ i[0].capitalize() }}</td><!--EMPRESA  -->
+        <td>{{ i[1] }}</td><!--PEDIDO  -->
+        <td>{{ i[2] }}</td><!--DATA PEDIDO  -->
+        <td>{{ i[3].capitalize() }}</td>
+        <td>{{ i[4].capitalize() }}</td>
+        <td>{{ i[5].capitalize() }}</td><!--REGIAO  -->
+        <td>{{ i[6].capitalize() }}</td><!-- TRANSPORTADOR  -->
+        <td>{{ i[7] }}</td><!-- DOC  -->
+        <td>{{ i[8] }}</td><!-- DOC  -->
+        <td>{{ i[9] }}</td><!-- COD_CLI -->
+        <td>{{ i[10].capitalize() }}</td><!-- DESTINATARIO -->
+        <td>{{ i[11].capitalize() }}</td><!-- MUNICIPIO  -->
+        <td>{{ i[12] }}</td><!-- UF  -->
+        <td>{{ i[13] }}</td><!-- macro_canal  -->
+        <td>{{ i[14] }}</td><!-- CURVE -->
+        <td>{{ i[15] }}</td><!-- VOLUME -->
+        <td>{{ i[16] }}</td><!-- PESO BRUTO-->
+        <td>{{ i[17] }}</td><!-- VAL_DOC -->
+        <td>{{ i[18] }}</td><!-- DATA NF -->
+        <td>{{ i[19] }}</td><!-- EXPED -->
+        <td>{{ i[20] }}</td><!-- LEADTIME -->
+        <td>{{ i[21] }}</td><!-- PREV ENTREGA-->
+        <td>{{ i[22] }}</td><!-- AGEND -->
+        <td>{{ i[23] }}</td><!-- DT AGENDA -->
+        <td>{{ i[24] }}</td><!-- DT REAGENDA -->
+        <td>{{ i[25] }}</td><!-- DTA ENTREGA -->
+        <td>{{ i[26].capitalize() }}</td><!-- STATUS -->
+        <td>{{ i[27].capitalize() }}</td><!-- PRAZO -->
+        <td><!-- CONFIGURACAO DO BOTAO EDITAR -->
+          <button type="button"
+                        class="btn btn-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#exampleModal"
+                        data-bs-whatever="@mdo"
+                        > Editar</button>
+
+        </td>
+        <td>{{ i[28].capitalize() }}</td><!-- OBS -->
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Inserir Ocorrencia  </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      <div class="mb-3">
+        <form action="/teste" METHOD="post">
+        <div>
+          <input type="text"
+                 class="form-control"
+                 aria-label="Default"
+                 aria-describedby="inputGroup-sizing-default"
+                 placeholder="Digite aqui..." name = "name" >
+        </div>
+        <br>
+        <div>
+          <input type="submit" value="Incluir" class="btn btn-secondary">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+        </div>
+        </form>
+        <div class="modal-footer">
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+      </tr>
+    {% endfor %}
+  </tbody>
+
+</table>

@@ -1,0 +1,83 @@
+
+th{font-family:calibri, roboto, sans-serif,tahoma;padding:5px 3px 3px 3px;color:#0B0B3B;font-size:15px;font-weight:normal;white-space:nowrap;border-radius:4px;-moz-border-radius:4px;-webkit-border-radius:4px;box-shadow:1px 1px 1px #888888;}
+
+th:not([scope=row]){position:-webkit-sticky;position:sticky;top:0;}
+td{font-family:calibri, sans-serif,arial,tahoma;color:#2E2E2E;padding:3px;font-size:12px;font-weight:normal;white-space:nowrap;}
+.caixatext1{font-family:calibri, sans-serif,arial,tahoma;color:#2E2E2E;padding:2px;font-size:11px;border:1px solid #E6E6E6;text-decoration:none;border-radius:4px;-moz-border-radius:4px;-webkit-border-radius:4px;}
+
+.detalhe1{font-family:calibri, sans-serif,arial,tahoma;padding:2px;font-size:11px;color:#2E2E2E;border-radius:4px;-moz-border-radius:4px;-webkit-border-radius:4px;}
+.detalhe2{font-family:calibri, sans-serif,arial,tahoma;padding:2px;font-size:8px;background-color:#F0F8FF;color:#2E2E2E;text-decoration:none;border-radius:4px;-moz-border-radius:4px;-webkit-border-radius:4px;}
+
+
+botao_display:hover{
+    background-color: 100.10.100.10; /* Green */
+  color: white;
+}
+
+.teste{}
+a:hover{text-decoration:none;}
+a:link{color:#d7d8de;text-decoration:none;}
+a:visited{color:#ebebeb;text-decoration:none;}
+a:hover{color:blue;text-decoration:none;}
+a:active{color:red;text-decoration:none;}
+
+.cab_tabela {
+    font-size:15px;
+    background-color:#e9ecef;
+}
+}
+
+
+.float-container {
+    padding: 1px;
+}
+
+
+.float-child0 {
+    width: 100%;
+    float: left;
+    padding: 1px;
+    margin:0px;
+        ;
+}
+
+
+.float-child1 {
+    width: 50%;
+    float: left;
+    padding: 5px;
+    margin-top:13px;
+    font-size:14px;
+    ;
+}
+/* nao utilizados em float-child1
+border: 1px solid grey;
+    background-color: rgb(190, 190, 190)
+*/
+
+.float-child2 {
+    width: 35%;
+    float: right;
+    margin-top:13px;
+    padding: 1px;
+}
+
+
+.float-child3 {
+    width: 100%;
+    float: left;
+    font-size: 14px;
+}
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 20px;
+}
+/*
+.container {display: flex;} /* Torna o container um flex container */
+
+.div1, .div2 {
+    flex: 1; /* Faz com que ambas as divs ocupem a mesma largura dentro do container*/
+    padding: 10px; /* Adiciona algum espaçamento interno para as divs*/
+    border: 1px solid #000; /* Adiciona uma borda para as divs (opcional)*/
+        }

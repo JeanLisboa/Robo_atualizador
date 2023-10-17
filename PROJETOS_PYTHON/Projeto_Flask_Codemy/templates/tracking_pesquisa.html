@@ -1,0 +1,64 @@
+{% block content %}
+
+<form method="POST">
+    <div class="collapse collapse-vertical" id="ocultar_pesquisa">
+
+        <table>
+           <!--primeira linha-->
+
+            <tr class="cab_tabela">
+                <th>Empresa</th>
+                <th>Status</th>
+                <th>Agenda</th>
+                <th>Data de</th>
+                <th>Data até</th>
+            </tr>
+            <tr>
+           <td>{{ empresa }}</td>
+                <td>{{ status }}</td>
+                <td>{{ agend }}</td>
+                <td>{{ data_de }}</td>
+                <td>{{ data_ate }}</td>
+          </tr>
+            <!--segunda linha-->
+           <tr class="cab_tabela">
+                <th>Danfe</th>
+                <th>Pedido</th>
+                <th>Cod Cliente</th>
+                <th>Destinatario</th>
+                <th>Uf</th>
+           </tr>
+            <tr>
+
+                <td>{{ danfe}}</td>
+                <td>{{ pedido }}</td>
+                <td>{{ cod_cli }}</td>
+                <td>{{ destinatario }}</td>
+                <td> {{ uf }}</td>
+            </tr>
+            <!--terceira linha-->
+            <tr class="cab_tabela">
+                <th>Regiao</th>
+                <th>Vendedor</th>
+                <th>Macro Canal</th>
+                <th>Transportadora</th>
+            </tr>
+            <tr>
+                <td>{{ regiao }}</td>
+                <td>{{ vendedor }}</td>
+                <td>{{ macro_canal }}</td>
+                <td>{{ transportadora }}</td>
+            </tr>
+            <tr>
+                <td> </td>
+            </tr>
+
+        </table>
+
+
+        {{ form_teste.processa }}
+    </div>
+</form>
+
+
+{% endblock %}

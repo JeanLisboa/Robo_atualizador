@@ -1,0 +1,63 @@
+<div class="collapse collapse-vertical" id="ocultar_resumo">
+    <table class="table table-hover table-striped table-sm table-layout:fixed " >
+
+
+        <tr>
+          <th class="cab_tabela" colspan="5" align="center" > RESUMO DO TRACKING </th>
+      </tr>
+      <tr>
+
+          <th width="100"><b>STATUS</b></th>
+          <th width="60"><b>DOC</b></th>
+          <th width="80"><b>VOLUME</b></th>
+          <th width="90"><b>VALOR DOC</b></th>
+          <th width="40"><b>%</b></th>
+
+      </tr>
+      <tr>
+          <td><b>AGENDADO</b></td>
+          <td>{{ analisa_prazo[11] }}</td>
+          <td>{{ analisa_prazo[17] }}</td>
+          <td>{{ '%0.2f' % analisa_prazo[23] }}</td>
+          <td>{{ '%0.1f' % analisa_prazo[29] }}</td>
+      </tr>
+        <tr>
+          <td><b>SEM DEFINICAO DA AGENDA</b></td>
+           <td>{{ analisa_prazo[12] }}</td>
+          <td>{{ analisa_prazo[18] }}</td>
+          <td>{{ '%0.2f' % analisa_prazo[24] }}</td>
+          <td>{{ '%0.1f' % analisa_prazo[30] }}</td>
+      </tr>
+        <tr>
+          <td><b>REAGENDADO</b></td>
+          <td>{{ analisa_prazo[13] }}</td>
+          <td>{{ analisa_prazo[19] }}</td>
+          <td>{{ '%0.2f' % analisa_prazo[25] }}</td>
+          <td>{{ '%0.1f' % analisa_prazo[32] }}</td>
+      </tr>
+        <tr>
+          <td><b>EM TRANSITO</b></td>
+          <td>{{ analisa_prazo[14] }}</td>
+          <td>{{ analisa_prazo[20] }}</td>
+          <td>{{ '%0.2f' % analisa_prazo[26] }}</td>
+          <td>{{ '%0.1f' % analisa_prazo[33] }}</td>
+      </tr>
+         <tr>
+          <td><b>ENTREGUE</b></td>
+          <td>{{ analisa_prazo[0] }}</td>
+          <td>{{ analisa_prazo[21] }}</td>
+          <td>{{ '%0.2f' % analisa_prazo[27] }}</td>
+          <td>{{ '%0.1f' % analisa_prazo[31] }}</td>
+      </tr>
+           <tr>
+          <td><b>DEVOLUCAO</b></td>
+          <td>{{ analisa_prazo[16] }}</td>
+          <td>{{ analisa_prazo[22] }}</td>
+          <td>{{ '%0.2f' % analisa_prazo[28] }}</td>
+          <td>{{ '%0.1f' % analisa_prazo[34] }}</td>
+      </tr>
+
+
+    </table>
+
+</div>

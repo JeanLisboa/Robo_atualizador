@@ -1,0 +1,45 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark  fixed  -top gr">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item ">
+            <a class="btn btn-sm btn-outline-secondary return=false" href="{{ url_for('tracking')}}" >Tracking</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('index')}}">Outras</a>
+        </li>
+        <li class="nav-item">
+              <a class="btn btn-sm btn-outline-secondary"  href="{{ url_for('dashboard')}}">Dashboard</a>
+        </li>
+
+      <li class="nav-item">
+          <a class="btn btn-sm btn-outline-secondary"  href="{{ url_for('add_ocorrencia')}}">teste</a>
+    </li>
+
+
+        <li class="nav-item">
+              <a class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#ocultar_pesquisa" aria-expanded="false" aria-controls="ocultar_pesquisa">Pesquisa</a>
+        </li>
+        <li class="nav-item" >
+                 <a class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#ocultar_backlog" aria-expanded="false" aria-controls="ocultar_backlog">Backlog</a>
+        </li>
+
+
+        <li class="nav-item" >
+                 <a class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#ocultar_resumo" aria-expanded="false" aria-controls="ocultar_resumo">Resumo</a>
+        </li>
+        <li class="nav-item" >
+                 <a class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#ocultar_resumo" aria-expanded="false" aria-controls="ocultar_resumo">Editar_tabela</a>
+        </li>
+
+      </ul>
+
+    </div>
+  </div>
+
+</nav>
