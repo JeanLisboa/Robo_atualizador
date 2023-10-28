@@ -1,14 +1,16 @@
 import datetime
 from datetime import datetime
 from datetime import date
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, flash, redirect
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField, DateField, TextAreaField
+from wtforms.validators import DataRequired, Length, Email, EqualTo
 import mysql.connector
 from workadays import workdays as wd
 from datetime import timedelta
 import plotly.express as px
-
+import plotly.graph_objects as go
+from forms import Formlogin
 
 app = Flask(__name__)
 # secret key
@@ -25,15 +27,30 @@ cnx = mysql.connector.connect(user='admin',
 cursor = cnx.cursor()
 
 
-@app.route('/')
-def index():
-    stuff =  '<strong>MEGA DASH EM ANDAMENTO </strong>'
-    first_name = 'jean'
-    equipe = 'Jean', 'Andreia', 'Daiane', 'Debora', 'Luana', 'Gisele', 'Fernanda'
-    return render_template("index.html",
-                           first_name=first_name,
-                           stuff=stuff, equipe=equipe)
 
+#
+# @app.route('/')
+# def index():
+#
+#     stuff =  '<strong>MEGA DASH EM ANDAMENTO </strong>'
+#     first_name = 'jean'
+#     equipe = 'Jean', 'Andreia', 'Daiane', 'Debora', 'Luana', 'Gisele', 'Fernanda'
+#     return render_template("index.html",
+#                            first_name=first_name,
+#                            stuff=stuff, equipe=equipe)
+
+
+@app.route('/', methods=['GET','POST'])
+def index():
+    form_login = Formlogin()
+
+    if form_login.validate_on_submit() and 'botao_submit_login' in request.form:
+        # verifica se ocorreu a validação e se o botao clicado foi o login
+        # isto é especialmente importante quando há mais de um botão na mesma pagina
+        flash(f'Você está logado como {form_login.email.data}', 'alert-success')
+        return redirect('tracking')
+
+    return render_template('login.html', form_login=form_login)
 
 class Teste(FlaskForm): # configura os botoes do html 'tracking'
     processa = SubmitField("Processa")
@@ -61,8 +78,14 @@ def add_ocorrencia():
     title = 'pagina teste'
     if request.method == 'POST':
         insert_text = request.form['name']
+        doc = request.data
+
+        # doc = int(doc)
         # nf = request.form['id']
         print(insert_text)
+        print(doc)
+
+        # print(doc)/
 
         # send_info = f"update base_tracking set obs = " \
         #             f"concat(obs, {insert_text}) where doc = {} "
@@ -465,7 +488,6 @@ def tracking():
 
 
 
-
 @app.route('/dashboard', methods=['GET', 'POST'])
 class Dash(FlaskForm):
     d_processa = SubmitField("Processa")
@@ -546,22 +568,108 @@ class Dash(FlaskForm):
             transp = []
             regiao = []
 
+
             vol_uf = 0
             val_uf = 0
             peso_uf = 0
-
             for i in result_dash:
                 if i[5] not in regiao:
                     regiao.append(i[5])
                 else:
                     pass
-
+            
+                # print(regiao)
 
             for i in result_dash:
                 if i[12] not in uf:
                     uf.append(i[12])
                 else:
                     pass
+
+
+            for i in result_dash:
+                if i[6] not in transp:
+                    transp.append(i[6])
+
+
+                else:
+                    pass
+
+            otd_transp = 0
+            g4_transp = []
+            g4_otd = []
+            for a in transp:
+                # baixa o somatorio do volume
+                otd_transp_prazo = f'select count(volume) from base_tracking where transp = "{a}" and prazo = "no prazo"'
+                g4_transp.append(a)  # adiciona a uf à g1_uf
+                cursor.execute(otd_transp_prazo)
+                otd_transp_prazo = cursor.fetchall()
+                # extrai o valor da lista e da tupla
+                otd_transp_prazo = otd_transp_prazo[0][0]  # acessa o primeiro item da lista, em seguida, o primeiro item da tupla
+                
+                if otd_transp_prazo == None:
+                    pass
+                else:
+                    otd_transp_prazo = int(otd_transp_prazo)
+                # inclui o valor à lista
+
+                otd_transp_foraprazo = f'select count(volume) from base_tracking where transp = "{a}" and prazo = "fora do prazo"'
+                # g4_transp.append(a)  # adiciona a uf à g1_uf
+                cursor.execute(otd_transp_foraprazo)
+                otd_transp_foraprazo = cursor.fetchall()
+                otd_transp_foraprazo = otd_transp_foraprazo[0][0]
+                otd_transp = (otd_transp_prazo/(otd_transp_prazo+otd_transp_foraprazo))*100
+                g4_otd.append(otd_transp)
+
+                print(f' REGIAO:{a} OTD: {g4_otd}')
+
+            print('---------------------------------------------------')
+
+            otd_regiao = 0
+            g5_regiao = []
+            g5_otd = []
+            for a in regiao:
+                # baixa o somatorio do volume
+                otd_regiao_prazo = f'select count(volume) from base_tracking where nome_regiao = "{a}" and prazo = "no prazo"'
+                g5_regiao.append(a)  # adiciona a uf à g1_uf
+                cursor.execute(otd_regiao_prazo)
+                otd_regiao_prazo = cursor.fetchall()
+                # extrai o valor da lista e da tupla
+                otd_regiao_prazo = otd_regiao_prazo[0][0]  # acessa o primeiro item da lista, em seguida, o primeiro item da tupla
+
+                if otd_regiao_prazo == None:
+                    pass
+                else:
+                    otd_regiao_prazo = int(otd_regiao_prazo)
+                # inclui o valor à lista
+
+                otd_regiao_foraprazo = f'select count(volume) from base_tracking where nome_regiao = "{a}" and prazo = "fora do prazo"'
+                # g4_transp.append(a)  # adiciona a uf à g1_uf
+                cursor.execute(otd_regiao_foraprazo)
+                otd_regiao_foraprazo = cursor.fetchall()
+                otd_regiao_foraprazo = otd_regiao_foraprazo[0][0]
+                otd_regiao = (otd_regiao_prazo / (otd_regiao_prazo + otd_regiao_foraprazo)) * 100
+                g5_otd.append(otd_regiao)
+
+                print(f' REGIAO:{a} OTD: {g5_otd}')
+
+            g3_transp = []
+            g3_num = []
+            for a in transp:
+                # baixa o somatorio do volume
+                vol_transp = f'select sum(volume) from base_tracking where transp = "{a}"'
+                g3_transp.append(a)  # adiciona a uf à g1_uf
+                cursor.execute(vol_transp)
+                vol_transp = cursor.fetchall()
+                # extrai o valor da lista e da tupla
+                vol_transp = vol_transp[0][0]  # acessa o primeiro item da lista, em seguida, o primeiro item da tupla
+                if vol_transp == None:
+                    pass
+                else:
+
+                    vol_transp = int(vol_transp)
+                # inclui o valor à lista
+                g3_num.append(vol_transp)
 
             g1_uf = []
             g1_num = []
@@ -587,19 +695,19 @@ class Dash(FlaskForm):
                 vol_regiao = vol_regiao[0][0]
                 vol_regiao = int(vol_regiao)
                 g2_num.append(vol_regiao)
+                
 
 
-                # g2_regiao = ['junho', 'julho', 'agosto', 'setembro', 'outubro']
-                # g2_num = [1, 5, 2, 7, 4]
 
-            return g1_uf, g1_num, g2_regiao, g2_num
+
+            return g1_uf, g1_num, g2_regiao, g2_num, g3_transp, g3_num, g4_transp, g4_otd, g5_regiao, g5_otd
             # nfs emitidas mes / qtd / valor_nf
             # nfs entregues no prazo / fora do prazo / mes de entrega
 
-        def graf1():
-            g1_uf, g1_num, g2_regiao, g2_num = dados_dash()
+        cor_fundo = 'white'  # Defina a cor de fundo desejada
 
-            # otd = g1_num
+        def graf1():
+            g1_uf, g1_num, g2_regiao, g2_num, g3_transp, g3_num, g4_transp, g4_otd, g5_regiao, g5_otd = dados_dash()
             axis_x = []
             axis_y = []
             for i in g1_uf:
@@ -609,11 +717,13 @@ class Dash(FlaskForm):
 
             titulo = 'VOL X UF'
             graf1 = px.bar(x=axis_x, y=axis_y, title=titulo)
+            graf1.update_layout(plot_bgcolor=cor_fundo)   # paper_bgcolor=cor_fundo
+
             graf1 = graf1.to_html(full_html=False)
             return graf1
 
         def graf2():
-            g1_uf, g1_num, g2_regiao, g2_num = dados_dash()
+            g1_uf, g1_num, g2_regiao, g2_num, g3_transp, g3_num, g4_transp, g4_otd, g5_regiao, g5_otd = dados_dash()
 
             axis_x = []
             axis_y = []
@@ -623,12 +733,109 @@ class Dash(FlaskForm):
                 axis_y.append(a)
             titulo = 'VOL x REGIAO'
             graf2 = px.bar(x=axis_x, y=axis_y, title=titulo)
+            graf2.update_layout(plot_bgcolor=cor_fundo)   # paper_bgcolor=cor_fundo
+
             graf2 = graf2.to_html(full_html=False)
             return graf2
 
+        def graf3():
+            g1_uf, g1_num, g2_regiao, g2_num, g3_transp, g3_num, g4_transp, g4_otd, g5_regiao, g5_otd = dados_dash()
 
-        return render_template('dashboard.html', d_processa=d_processa, d_empresa=d_empresa,d_uf=d_uf, d_regiao=d_regiao, d_agend=d_agend, d_macro_canal=d_macro_canal, d_vendedor=d_vendedor, d_transportadora=d_transportadora, d_mes_nf=d_mes_nf,d_mes_ind=d_mes_ind, graf1=graf1(), graf2=graf2() )
+            axis_x = []
+            axis_y = []
+            for a in g3_transp:
+                axis_x.append(a)
+            for a in g3_num:
+                axis_y.append(a)
+            titulo = 'VOL x TRP'
+            graf3 = px.bar(x=axis_x, y=axis_y, title=titulo)
+            graf3.update_layout(plot_bgcolor=cor_fundo)   # paper_bgcolor=cor_fundo
 
+            # opacity=0.2 - opacidade
+
+            graf3 = graf3.to_html(full_html=False)
+            return graf3
+
+
+        def graf4():
+            g1_uf, g1_num, g2_regiao, g2_num, g3_transp, g3_num, g4_transp, g4_otd, g5_regiao, g5_otd = dados_dash()
+
+            axis_x = []
+            axis_y = []
+            cores = [] # Lista para armazenar as cores das barras
+
+            for a in g4_transp:
+                axis_x.append(a)
+            for a in g4_otd:
+                axis_y.append(a)
+                # Defina a cor com base na condição (menor que 0.95 fica vermelho, caso contrário, azul)
+
+                if a < 95.5:
+                    cores.append('red')
+                else:
+                    cores.append('blue')
+
+
+
+            titulo = 'OTD x TRP'
+
+
+
+            graf4 = px.bar(x=axis_x, y=axis_y, title=titulo)
+
+            # opacity=0.2 - opacidade
+            # linha da meta
+            linha = (95.5, 95.5)
+            linha = go.Scatter(x=axis_x, y=linha * len(axis_x), mode='lines', name='Meta')
+            graf4.add_trace(linha)
+            graf4.update_traces(marker_color=cores)
+            graf4.update_layout(plot_bgcolor=cor_fundo)   # paper_bgcolor=cor_fundo
+
+            graf4 = graf4.to_html(full_html=False)
+            return graf4
+
+
+        def graf5():
+            g1_uf, g1_num, g2_regiao, g2_num, g3_transp, g3_num, g4_transp, g4_otd, g5_regiao, g5_otd = dados_dash()
+
+            axis_x = []
+            axis_y = []
+            cores = [] # Lista para armazenar as cores das barras
+
+            for a in g5_regiao:
+                axis_x.append(a)
+            for a in g5_otd:
+                axis_y.append(a)
+                # Defina a cor com base na condição (menor que 0.95 fica vermelho, caso contrário, azul)
+
+                if a < 95.5:
+                    cores.append('red')
+                else:
+                    cores.append('blue')
+
+
+
+            titulo = 'OTD x REGIAO'
+
+
+
+            graf5 = px.bar(x=axis_x, y=axis_y, title=titulo)
+
+            # opacity=0.2 - opacidade
+            # linha da meta
+            linha = (95.5, 95.5)
+            linha = go.Scatter(x=axis_x, y=linha * len(axis_x), mode='lines', name='Meta')
+            graf5.add_trace(linha)
+            graf5.update_traces(marker_color=cores)
+            graf5.update_layout(plot_bgcolor=cor_fundo)   # paper_bgcolor=cor_fundo
+
+            graf5 = graf5.to_html(full_html=False)
+            return graf5
+
+
+
+
+        return render_template('dashboard.html', d_processa=d_processa, d_empresa=d_empresa,d_uf=d_uf, d_regiao=d_regiao, d_agend=d_agend, d_macro_canal=d_macro_canal, d_vendedor=d_vendedor, d_transportadora=d_transportadora, d_mes_nf=d_mes_nf,d_mes_ind=d_mes_ind, graf1=graf1(), graf2=graf2(), graf3=graf3(), graf4=graf4(), graf5=graf5() )
 
 
 

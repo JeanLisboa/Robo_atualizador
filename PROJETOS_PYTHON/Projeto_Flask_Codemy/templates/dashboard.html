@@ -1,9 +1,24 @@
 {% extends "base.html" %}
 {% block content %}
 
+
 <div class="row row-cols-1 row-cols-md2">
     <div>
         <table>
+            <tr class="cab_tabela">
+               <th> </th>
+                <th>EMPRESA</th>
+                <th>UF</th>
+                <th>REGIAO</th>
+                <th>AGENDA</th>
+                <th>MACRO CANAL</th>
+                <th>VENDEDOR</th>
+                <th>TRANSPORTADORA</th>
+                <th>MES NF</th>
+                <th>MES IND</th>
+                <th>PROCESSA</th>
+
+            </tr>
             <tr  class="cab_tabela">
                 <th> </th>
                 <td> {{ d_empresa }} </td>
@@ -23,38 +38,43 @@
 
     <div class="col-sm">
         GRID 0
-        <div style="width:50%;max-width:400px">
-            {{ graf1 | safe }}
-
+         <!-- <div style="width:50%;max-width:400px">    PARA LIMITAR A ÁREA DA DIV ONDE ESTÁ  GRÁFICO-->
+        <div>
+            {{ graf1  | safe }}
         </div>
     </div>
 
-
     <div class="col-sm">
         GRID 1
-        <div style="width:50%;max-width:400px">
+        <div>
             {{ graf2 | safe }}
         </div>
     </div>
 
-    <div class="col-sm">
+    <div class="col">
         GRID 2
-        <div  style="width:50%;max-width:400px">
+        <div>
+            {{ graf3 | safe }}
         </div>
     </div>
 
-    <div class="col-sm">
+     <div class="col">
         GRID 3
-        <div  style="width:50%;max-width:500px">
+        <div>
+           {{ graf4 | safe }}
         </div>
     </div>
 
-
+     <div class="col">
+        GRID 3
+        <div>
+           {{ graf5 | safe }}
+        </div>
+    </div>
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
 
 
 </div>
-
 
 {% endblock %}
