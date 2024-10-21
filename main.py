@@ -9,15 +9,16 @@ import pywhatkit
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
+
 class Feedback:
     print('Class Feedback')
-    def __init__(self,  master, opcao_mes, opcao_ano, opcao_regional, teste_arquivo):
-        # feedback = Feedback(root, opcao_ano=StringVar, opcao_mes=StringVar(), opcao_regional=StringVar(),
-        #                         teste_arquivo=StringVar())
+    def __init__(self, master, opcao_mes, opcao_ano, opcao_regional, teste_arquivo, info_backlog):
         self.opcao_mes = opcao_mes
         self.opcao_ano = opcao_ano
         self.opcao_regional = opcao_regional
         self.teste_arquivo = teste_arquivo
+        self.info_backlog = info_backlog  # Atributo da classe
+
         master.title('Atualizações Diárias Tracking')
         master.resizable(False, False)
 
@@ -70,6 +71,7 @@ class Feedback:
         self.opcao_mes = StringVar()
         self.teste_arquivo = StringVar()
         self.opcao_ano = StringVar()
+        self.info_backlog = StringVar()
 
         self.combobox = ttk.Combobox(self.Labelframe_atualiza)
         self.combobox.config(textvariable=self.opcao_mes,
@@ -86,7 +88,6 @@ class Feedback:
         self.combobox2.bind('<<ComboboxSelected>>',
                             self.selec_regional)  # 'self.selec_mes' é a função q está fora da classe
 
-        # --------------------------
         self.combobox3 = ttk.Combobox(self.Labelframe_atualiza)
         self.combobox3.config(textvariable=self.opcao_ano,
                               values=['2023', '2024'], width=5)
@@ -138,18 +139,11 @@ class Feedback:
         self.Labelframe_executar.pack(fill=BOTH, expand=True)
         ttk.Label(self.Labelframe_executar, text='Desenvolvido por Jean Lino', font=('arial', 9, "italic")).grid(row=1, column=0, stick='sw')
 
-    def aba_excel(self):
-        if self.opcao_ano == 2023:
-            aba = 'Base'
-        else:
-            aba = 'Base'
-        return aba
 
-    def campos_planilba(self):
-        return
+    # funçoes do tkinter
 
     def sel_processo(self):
-        # print('Class: Feedback, Método: sel_processo.')
+        print('Class: Feedback, Método: sel_processo. \n')
         a = self.opcao_processo.get()
 
         if a == '1':
@@ -167,32 +161,34 @@ class Feedback:
             self.combobox.state(['disabled'])
 
     def sel_dist(self):
-        # print('class: Feedback, método: sel_dist')
+        # print('class: Feedback, método: sel_dist \n')
         a = self.opcao_dist.get()
+        # print(f'Distribuidora {a} selecionada')
         return a
 
     def selec_mes(self, *args):
-        print('class: Feedback, método: sel_mes')
+        print('class: Feedback, método: sel_mes \n')
         a = self.opcao_mes.get()
-        print(f'def selec_mes retorna: {a}')
+        print(f'mês {a} selecionado')
         return a
 
     def selec_regional(self, *args):
-        # print('class: Feedback, método: selec_regiao')
+        # print('class: Feedback, método: selec_regional \n')
         a = self.opcao_regional.get()
         # print(f'Regional {a} Selecionada')
         return a
 
     def selec_ano(self, *args):
-        # print('class: Feedback, método: selec_ano')
+        print('class: Feedback, método: selec_ano \n')
         a = self.opcao_ano.get()
+        print(a)
         # print(f'def selec_ano retorna: {a}')
         return a
 
-    def seleciona_vendedor(self, *args):
-        print('class: Feedback, método: seleciona_vendedor')
-        a = self.op_vend.get()
-        print(a)
+    # def seleciona_vendedor(self, *args):
+    #     print('class: Feedback, método: seleciona_vendedor')
+    #     a = self.op_vend.get()
+    #     print(a)
 
     def report_comercial(self):
         print('class: Feedback, método: report_comercial')
@@ -307,6 +303,13 @@ class Feedback:
     mes = selec_mes
     df = 0
 
+    def aba_excel(self):
+        if self.opcao_ano == 2023:
+            aba = 'Base'
+        else:
+            aba = 'Base'
+        return aba
+
     @staticmethod
     def navegador(self):
         print('class: Feedback, método: navegador')
@@ -352,6 +355,7 @@ class Feedback:
     arquivo = sel_arquivo
 
     def executar(self):
+
         print('class: Feedback, método: executar')
         processo = self.opcao_processo.get()
         print(f'Processo {processo}')
@@ -361,7 +365,14 @@ class Feedback:
 
         print(f'Função Executar: Mês selecionado: {mes}')
         if processo == '1':
-            Intranet.acessa_tela_atualizar_expedicao(self)
+            retorno = Intranet.acessa_tela_atualizar_expedicao(self)
+            # import tela_backlog
+            #
+            # global info_backlog  # especifica que se quer alterar a variável global
+            # info_backlog = retorno
+            #
+            # # tela_backlog.BacklogApp.adicionar_backlog(info_backlog)
+
             messagebox.showinfo('Processo Concluído', 'Datas de Expediçao Atualizadas')
         if processo == '2':
             Intranet.atualiza_agenda(self)
@@ -388,7 +399,6 @@ class Feedback:
         Intranet.navegador.close()
         print('Encerrando Aplicação...')
         exit()
-
 
     def acessa_carteira(self):
         print('class: Intranet, método: acessa_carteira')
@@ -466,13 +476,13 @@ class Feedback:
             print(f'Lista vlr saldo > {vlr_saldo} - {len(vlr_saldo)}')
             print(f'Lista qtde saldo > {qtd_saldo} - {len(qtd_saldo)}')
             df = pd.DataFrame({
-                                'Pedido': pedidos,
-                                'Situação': situacao,
-                                'Fase': fase,
-                                'Destinatário': nome_fantasia,
-                                'Valor Saldo': vlr_saldo,
-                                'Quantidade Saldo': qtd_saldo
-                            })
+                'Pedido': pedidos,
+                'Situação': situacao,
+                'Fase': fase,
+                'Destinatário': nome_fantasia,
+                'Valor Saldo': vlr_saldo,
+                'Quantidade Saldo': qtd_saldo
+            })
             caminho_arquivo = r'C:\Users\jean.lino\OneDrive - Baruel\CONTROLES\BASE_AUTOMATICA\CARTEIRA_ALH.xlsx'
             df.to_excel(caminho_arquivo, index=False)
         print(pedidos)
@@ -617,13 +627,14 @@ class Tracking:
         return dicionario
 
     def importa_data_agenda(self):
-
         a = Intranet.gera_lista_ped_sem_agenda(self)
         # df = Feedback.df()
         print(Feedback.dist)
         df = pd.read_excel(f'{teste_arquivo}', sheet_name=Feedback.aba_excel(self))
         relatorio = df[["Pedido", "Dt Agenda"]]  # considera todas as datas de agenda, inclusive as de nfs já entregues
         relatorio = relatorio.dropna(axis=0)  # exclui as células  vazias
+        print('Relatorio')
+        print(relatorio)
         print('* * * * * * Importa Data De Agenda * * * * * *')
 
         data_agenda_ini = pd.to_datetime(relatorio['Dt Agenda'])  # puxa a data no formato yyyy-mm-dd
@@ -658,7 +669,7 @@ class Tracking:
                 # temp
                 cont += 1
 
-        print(dicionario)  # mostra os pedidos e datas localizados na planilha
+        # print(dicionario)  # mostra os pedidos e datas localizados na planilha
         if cont == 0:
             print(f'\n{cont} pedidos localizados')
 
@@ -680,7 +691,7 @@ class Tracking:
         doc = doc_int
         trk = zip(doc, data_entrega)
         tracking = dict(trk).items()
-        print(tracking)
+        # print(tracking)
         cont = 0
         dicionario = {}
         for p, d in tracking:
@@ -691,9 +702,10 @@ class Tracking:
                     dicionario_temp.clear()  # limpa o dicionario temp
                     cont += 1
 
-        print(dicionario)
-        print(f'\n {cont} Datas de entrega localizadas')
+        # print(dicionario)
+        print(f'{cont} Datas de entrega localizadas')
         return dicionario
+
 
 class Intranet(Feedback, object):
     print('Classe: Intranet')
@@ -702,6 +714,7 @@ class Intranet(Feedback, object):
     options.page_load_strategy = 'normal'
     navegador = webdriver.Chrome(options=options)
     navegador.minimize_window()
+
 
     def acessa_intranet(self):
         print('Classe: Intranet, Método: acessa_Intranet')
@@ -720,7 +733,6 @@ class Intranet(Feedback, object):
         Intranet.navegador.find_element('xpath',
                                         '/html/body/form/table/tbody/tr[2]/td/table/tbody/tr[3]/td[2]/input').send_keys(
             Keys.ENTER)
-
 
     def acessa_tela_pedidos_otc(self):
         print('class: Intranet, método: acessa_tela_pedidos_otc')
@@ -802,6 +814,7 @@ class Intranet(Feedback, object):
             Intranet.navegador.find_element('xpath', '/html/body/form[2]/table[1]/tbody/tr[2]/td[1]/select').send_keys(
                 Keys.ARROW_DOWN)
 
+
     def gera_lista_nfs_nao_expedidas(self):
         print('Classe: Intranet, Método: gera_lista_nfs_nao_expedidas')
         Intranet.navegador.find_element('xpath',
@@ -843,8 +856,8 @@ class Intranet(Feedback, object):
                 # print(linha)
                 nfs_nao_expedidas.append(nf)  # insere na lista
 
-        except Exception as e:
-            print(e)
+        except:
+            print("Busca Finalizada")
         finally:
             pass
             # print(f"{tr - 2} NF'S nao expedidas")
@@ -852,13 +865,14 @@ class Intranet(Feedback, object):
         return nfs_nao_expedidas
 
     def acessa_tela_atualizar_expedicao(self):
+        info_backlog = 'info_backlog main.py---- teste >>>'
         hoje = date.today()
         hoje_a = datetime.day
         delta = timedelta(days=2)
         margem_de_erro_anterior = hoje - delta
         margem_de_erro_posterior = hoje + delta
-        # print(hoje)
-        # print(hoje_a)
+        nf_com_info_errada = ()
+        lista_nfs_com_info_errada = []
 
         print('Classe: Intranet, Método: acessa_tela_atualizar_expedicao')
         tracking = Tracking.importa_data_expedicao(self)
@@ -883,8 +897,8 @@ class Intranet(Feedback, object):
                 Keys.ARROW_DOWN)
         Intranet.navegador.find_element('xpath',
                                         '//*[@id="navigation"]/ul/li[4]/ul/a[3]').click()  # clica em expedição/entrega
-                                                # /html/body/div[2]/ul/li[4]/ul/a[3]
-                                            # //*[@id="navigation"]/ul/li[4]/ul/a[3]
+        # /html/body/div[2]/ul/li[4]/ul/a[3]
+        # //*[@id="navigation"]/ul/li[4]/ul/a[3]
         # ACESSA TELA DE EXPEDIÇÃO
 
         Intranet.navegador.find_element('xpath','/html/body/form[2]/table[1]/tbody/tr[2]/td[9]/a').click()  # clica no botão 'expedição'
@@ -898,6 +912,7 @@ class Intranet(Feedback, object):
                 '4')
         # importa lista com as nfs/dtas entrega que deverão ser lançadas
         c = 1
+        cont_erro = 0
         cont_nfs_expedidas = 0
         for nf, data in tracking.items():
             # print(f'{c} - {nf}: {data} ')
@@ -915,8 +930,33 @@ class Intranet(Feedback, object):
             Intranet.navegador.find_element('xpath', '/html/body/form[2]/table[1]/tbody/tr[2]/td[4]/input').send_keys(
                 Keys.ENTER)
             cont_nfs_expedidas += 1
+            # RELACIONA NFS COM ERRO NO LANÇAMENTO DA DATA DE EXPEDIÇÃO
+            alerta_erro = Intranet.navegador.find_element('xpath','/html/body/form[2]/div[2]').text
+            dta_emissao = Intranet.navegador.find_element('xpath', '/html/body/form[2]/table[2]/tbody/tr[2]/td[4]').text
 
-        print(f'{cont_nfs_expedidas} datas lançadas')
+            if alerta_erro != '':
+                lista_temp = []
+                lista_temp.append(nf)
+                lista_temp.append(dta_emissao)
+                lista_temp.append(data)
+                lista_temp.append(alerta_erro)
+                lista_nfs_com_info_errada.append(lista_temp[:])
+                lista_temp.clear()
+                cont_erro += 1
+                cont_nfs_expedidas += 1
+            else:
+                pass
+            teste = lista_nfs_com_info_errada
+
+
+        print(f"{cont_nfs_expedidas} datas processadas\n"
+              f"{cont_erro} NF's com erro ")
+
+        print('------ LOG DE ERRO DE DATAS DE EXPEDIÇÃO-------')
+        for i in teste:
+            print(i)
+        print('------ FIM DO LOG DE ERRO -------')
+
 
     def gera_lista_ped_sem_agenda(self):
         print('Class: Intranet - Metodo: Gera_lista_ped_sem_agenda')
@@ -1101,6 +1141,8 @@ class Intranet(Feedback, object):
 
     def acessa_tela_atualizar_entrega(self):
         print('Classe: Intranet, Método: acessa_tela_atualizar_entrega')
+        nf_com_info_errada = ()
+        lista_nfs_com_info_errada = []
         tracking = Tracking.importa_data_entrega(self)
         # acessar 'Customer Services'
         # CLICA EM CUSTOMER SERVICES
@@ -1144,6 +1186,7 @@ class Intranet(Feedback, object):
         # importa lista com as nfs/dtas entrega que deverão ser lançadas
         # print(f'distribuidora {Feedback.dist(self)} - {type(Feedback.dist(self))}')
         c = 1
+        cont_erro = 0
         cont_nfs_entregues = 0
         # valida a data de entrega.
         for nf, data in tracking.items():
@@ -1160,9 +1203,31 @@ class Intranet(Feedback, object):
             #  grava
             Intranet.navegador.find_element('xpath', '/html/body/form[2]/table[1]/tbody/tr[2]/td[4]/input').send_keys(
                 Keys.ENTER)
-            cont_nfs_entregues += 1
+            dta_emissao = Intranet.navegador.find_element('xpath','/html/body/form[2]/table[2]/tbody/tr[2]/td[4]').text
+            alerta_erro = Intranet.navegador.find_element('xpath', '/html/body/form[2]/div[2]').text
+            # print(f'Alerta erro: {alerta_erro}')
+            if alerta_erro != '':
+                lista_temp = []
+                lista_temp.append(nf)
+                lista_temp.append(dta_emissao)
+                lista_temp.append(data)
+                lista_temp.append(alerta_erro)
+                lista_nfs_com_info_errada.append(lista_temp[:])
+                lista_temp.clear()
+                cont_erro += 1
+                cont_nfs_entregues += 1
+            else:
+                pass
+            teste = lista_nfs_com_info_errada
 
-        print(f'{cont_nfs_entregues} datas lançadas')
+        print(f"{cont_nfs_entregues} datas processadas\n"
+              f"{cont_erro} NF's com erro ")
+
+        print('------ LOG DE ERRO DE DATAS DE ENTREGA -------')
+        for i in teste:
+            print(i)
+        print('------  FIM DO LOG DE ERRO -----')
+
 
     def gera_lista_nfs_nao_entregues(self):
         print('Classe: Intranet, Método: gera_lista_nfs_nao_entregues')
@@ -1261,14 +1326,14 @@ class Intranet(Feedback, object):
         # print('Feedback.Intranet.gera_lista_nfs_nao_entregues(self)')
         Intranet.gera_lista_nfs_nao_entregues(self)
         # print('Tracking.importa_data_entrega(self)')
-        Tracking.importa_data_entrega(self)  # funcionando
+        Tracking.importa_data_entrega(self)
 
 def main():
     print('def main')
     root = Tk()
     root.config(border=(20))
     feedback = Feedback(root, opcao_ano=StringVar, opcao_mes=StringVar(), opcao_regional=StringVar(),
-                        teste_arquivo=StringVar())
+                        teste_arquivo=StringVar(), info_backlog=StringVar)
     root.mainloop()
 
 if __name__ == '__main__': main()
