@@ -132,12 +132,13 @@ class Feedback:
         self.Labelframe_executar = ttk.LabelFrame(master)  # 4a janela filho
         self.Labelframe_executar.config(relief=GROOVE)
 
+        ttk.Button(self.Labelframe_executar, text='TSI', command=self.tsi).grid(row=0, column=0, sticky='sw')
         ttk.Button(self.Labelframe_executar, text='OK', command=self.executar).grid(row=0, column=1, sticky='sw')
         ttk.Button(self.Labelframe_executar, text='Fechar', command=self.fechar).grid(row=0, column=2, sticky='sw')
-        ttk.Button(self.Labelframe_executar, text='TSI', command=self.tsi).grid(row=0, column=0, sticky='sw')
+        ttk.Button(self.Labelframe_executar,text='Gerar Tracking Consolidado', command=self.baixar_consolidado).grid(row=0, column=3, sticky='sw')
         # ttk.Button(self.Labelframe_executar, text='Carteira', command=self.acessa_carteira).grid(row=0, column=3, sticky='sw')
         self.Labelframe_executar.pack(fill=BOTH, expand=True)
-        ttk.Label(self.Labelframe_executar, text='Desenvolvido por Jean Lino', font=('arial', 9, "italic")).grid(row=1, column=0, stick='sw')
+        ttk.Label(self.Labelframe_executar, text='Desenvolvido por Jean Lino', font=('arial', 9, "italic")).grid(row=2, column=0, stick='sw')
 
 
     # funçoes do tkinter
@@ -354,6 +355,13 @@ class Feedback:
 
     arquivo = sel_arquivo
 
+    @staticmethod
+    def baixar_consolidado():
+        print('class: Feedback, método: baixar_consolidado')
+        from consolida_trk import consolida_trk, arquivos
+        # consolida_trk.consolida_trk(consolida_trk.arquivos)
+
+
     def executar(self):
 
         print('class: Feedback, método: executar')
@@ -511,25 +519,30 @@ class Feedback:
         Intranet.navegador.find_element('xpath', '//*[@id="tabelaFornecedores"]/div[1]/div[3]/div/button').send_keys(
             Keys.ENTER)
 
-        print('Insere data Inicial')
         if data.day < 10 and data.month < 10:
             dta_final_formatada = f'0{data.day}/0{data.month}/{data.year}'  # ano  formato xx/xx/xxxx
+
 
         if data.day < 10 and data.month > 9:
             dta_final_formatada = f'0{data.day}/{data.month}/{data.year}'  # ano  formato xx/xx/xxxx
 
+
         if data.day > 9 and data.month < 10:
             dta_final_formatada = f'{data.day}/0{data.month}/{data.year}'  # ano  formato xx/xx/xxxx
 
-        print('Insere data final')
+
+        if data.day > 9 and data.month > 9  :
+            dta_final_formatada = f'{data.day}/{data.month}/{data.year}'  # ano  formato xx/xx/xxxx
+
         dta_inicial = data - timedelta(30)
+
+        print(f'Insere data Inicial {dta_inicial}')
         if dta_inicial.day < 10 and dta_inicial.month < 10:
             dta_inicial_formatada = f'0{dta_inicial.day}/0{dta_inicial.month}/{dta_inicial.year}'
         elif dta_inicial.day < 10:
             dta_inicial_formatada = f'0{dta_inicial.day}/{dta_inicial.month}/{dta_inicial.year}'
         elif dta_inicial.month < 10:
             dta_inicial_formatada = f'{dta_inicial.day}/0{dta_inicial.month}/{dta_inicial.year}'
-
         else:
             dta_inicial_formatada = f'{dta_inicial.day}/{dta_inicial.month}/{dta_inicial.year}'
         sleep(15.0)
@@ -538,6 +551,7 @@ class Feedback:
                                         '/html/body/div[3]/div[2]/div/div[2]/div[2]/div[2]/label/div/div/div[1]/input').send_keys(
             dta_inicial_formatada)
         sleep(3.0)
+        print(f'Insere data final {dta_final_formatada}')
         Intranet.navegador.find_element('xpath', '/html/body/div[3]/div[2]/div/div[2]/div[2]/div[3]/label').send_keys(
             dta_final_formatada)
         sleep(3.0)
@@ -953,8 +967,11 @@ class Intranet(Feedback, object):
               f"{cont_erro} NF's com erro ")
 
         print('------ LOG DE ERRO DE DATAS DE EXPEDIÇÃO-------')
-        for i in teste:
-            print(i)
+        try:
+            for i in teste:
+                print(i)
+        except Exception as e:
+            print(e)
         print('------ FIM DO LOG DE ERRO -------')
 
 
@@ -1205,6 +1222,7 @@ class Intranet(Feedback, object):
                 Keys.ENTER)
             dta_emissao = Intranet.navegador.find_element('xpath','/html/body/form[2]/table[2]/tbody/tr[2]/td[4]').text
             alerta_erro = Intranet.navegador.find_element('xpath', '/html/body/form[2]/div[2]').text
+
             # print(f'Alerta erro: {alerta_erro}')
             if alerta_erro != '':
                 lista_temp = []
@@ -1216,6 +1234,8 @@ class Intranet(Feedback, object):
                 lista_temp.clear()
                 cont_erro += 1
                 cont_nfs_entregues += 1
+
+
             else:
                 pass
             teste = lista_nfs_com_info_errada
@@ -1224,8 +1244,12 @@ class Intranet(Feedback, object):
               f"{cont_erro} NF's com erro ")
 
         print('------ LOG DE ERRO DE DATAS DE ENTREGA -------')
-        for i in teste:
-            print(i)
+        try:
+            for i in teste:
+                print(i)
+        except Exception as e:
+            print(e)
+
         print('------  FIM DO LOG DE ERRO -----')
 
 
