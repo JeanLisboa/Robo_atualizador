@@ -1,3 +1,4 @@
+from dotenv import load_dotenv
 import os
 import time
 from datetime import timedelta, date, datetime
@@ -9,6 +10,12 @@ import pywhatkit
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
+
+load_dotenv()  # Carrega as variáveis do .env
+
+senha = os.getenv("senha")
+senha_tsi = os.getenv('senha_tsi')
+login = os.getenv('login')
 
 class Feedback:
     print('Class Feedback')
@@ -100,7 +107,7 @@ class Feedback:
         self.combobox3.state(['readonly'])
         # ----------------------------------
         self.Labelframe_atualiza.pack(fill=BOTH, expand=True)
-
+        #  ESTE BLOCO NAO É MAIS UTILIZADO
         # configura o terceiro Labelframe
         # self.Labelframe_report_comercial = ttk.LabelFrame(master)  # 3a janela filho
         # self.Labelframe_report_comercial = ttk.LabelFrame(master)  # 3a janela filho
@@ -408,93 +415,6 @@ class Feedback:
         print('Encerrando Aplicação...')
         exit()
 
-    def acessa_carteira(self):
-        print('class: Intranet, método: acessa_carteira')
-        Intranet.acessa_intranet(self)
-        Intranet.navegador.find_element('xpath', '/html/body/form/table/tbody/tr[2]/td[2]/select').send_keys('L')
-        Intranet.navegador.find_element('xpath', '/html/body/form/table/tbody/tr[2]/td[2]/select').send_keys(Keys.ENTER)
-        Intranet.navegador.find_element('xpath', '/html/body/div[2]/ul/li[1]/a').click()
-        Intranet.navegador.find_element('xpath', '/html/body/div[2]/ul/li[1]/ul/a[1]').click()
-        Intranet.navegador.find_element('xpath', '/html/body/form[2]/table[1]/tbody/tr[2]/td[1]/select').click()
-        Intranet.navegador.find_element('xpath', '/html/body/form[2]/table[1]/tbody/tr[2]/td[1]/select').send_keys(Keys.ARROW_UP)
-        Intranet.navegador.find_element('xpath', '/html/body/form[2]/table[1]/tbody/tr[2]/td[1]/select').send_keys(Keys.ARROW_UP)
-        Intranet.navegador.find_element('xpath', '/html/body/form[2]/table[1]/tbody/tr[2]/td[1]/select').send_keys(Keys.ARROW_DOWN)
-        Intranet.navegador.find_element('xpath', '/html/body/form[2]/table[2]/tbody/tr/td[1]/input').send_keys(Keys.ENTER)
-
-        pedidos = []
-        situacao = []
-        fase = []
-        emissao = []
-        nome_fantasia = []
-        uf = []
-        qtd_saldo = []
-        vlr_saldo = []
-
-        tr = 2
-        try:
-            while True:
-
-                col_vlr_saldo = Intranet.navegador.find_element('xpath',f'/html/body/form[2]/table[3]/tbody/tr[{tr}]/td[25]') # VLr SALDO
-                vlr_sld = col_vlr_saldo.text
-                vlr_saldo.append(vlr_sld)
-
-                col_pedido = Intranet.navegador.find_element('xpath',f'/html/body/form[2]/table[3]/tbody/tr[{tr}]/td[3]') # pedido
-                pedido = col_pedido.text
-                pedido = int(pedido)
-                pedidos.append(pedido)
-
-                col_situacao = Intranet.navegador.find_element('xpath',f'/html/body/form[2]/table[3]/tbody/tr[{tr}]/td[6]')  # situacao
-                sit = col_situacao.text
-                situacao.append(sit)
-
-                col_fase = Intranet.navegador.find_element('xpath',f'/html/body/form[2]/table[3]/tbody/tr[{tr}]/td[7]') # fase
-                fse = col_fase.text
-                fase.append(fse)
-
-                col_nome_fant = Intranet.navegador.find_element('xpath', f'/html/body/form[2]/table[3]/tbody/tr[{tr}]/td[12]') # nome_fantasia
-                nme_fant = col_nome_fant.text
-                nome_fantasia.append(nme_fant)
-
-                col_uf = Intranet.navegador.find_element('xpath', f'/html/body/form[2]/table[3]/tbody/tr[{tr}]/td[13]') # UF
-                uff = col_uf.text
-                uf.append(uff)
-
-                col_qtd_saldo = Intranet.navegador.find_element('xpath',
-                                                                f'/html/body/form[2]/table[3]/tbody/tr[{tr}]/td[24]') # QTD SALDO
-                qtd_sld = col_qtd_saldo.text
-                qtd_sld = qtd_sld.replace('.', '')
-                qtd_sld = int(qtd_sld)
-                if qtd_sld == "":
-                    col_qtd_saldo == 0
-                qtd_saldo.append(qtd_sld)
-                tr += 2
-
-        except Exception as e:
-            print(e)
-            print('fim')
-            print('--------------------------')
-
-        finally:
-            print(f"{tr - 2} pedidos localizados")
-            print(f'Lista pedidos > {pedidos} - {len(pedidos)}')
-            print(f'Lista situacao > {situacao} - {len(situacao)}')
-            print(f'Lista fase > {fase} - {len(fase)}')
-            # print(f'Lista dt Emissao > {dt_emissao}')
-            print(f'Lista dt nome fantasia > {nome_fantasia} - {len(nome_fantasia)}')
-            print(f'Lista vlr saldo > {vlr_saldo} - {len(vlr_saldo)}')
-            print(f'Lista qtde saldo > {qtd_saldo} - {len(qtd_saldo)}')
-            df = pd.DataFrame({
-                'Pedido': pedidos,
-                'Situação': situacao,
-                'Fase': fase,
-                'Destinatário': nome_fantasia,
-                'Valor Saldo': vlr_saldo,
-                'Quantidade Saldo': qtd_saldo
-            })
-            caminho_arquivo = r'C:\Users\jean.lino\OneDrive - Baruel\CONTROLES\BASE_AUTOMATICA\CARTEIRA_ALH.xlsx'
-            df.to_excel(caminho_arquivo, index=False)
-        print(pedidos)
-        print()
 
     @staticmethod
     def tsi():
@@ -504,9 +424,9 @@ class Feedback:
         Intranet.navegador.get('https://tsicliint.intecomlogistica.com.br/#/')
         print("Logging")
         Intranet.navegador.find_element('xpath', '//*[@id="q-app"]/div/div/main/div/div[3]/label[1]') \
-            .send_keys('jean.lino@baruel.com.br')
+            .send_keys(login)
         Intranet.navegador.find_element('xpath', '//*[@id="q-app"]/div/div/main/div/div[3]/label[2]') \
-            .send_keys('151082')
+            .send_keys(senha_tsi)
         Intranet.navegador.find_element('xpath', '//*[@id="q-app"]/div/div/main/div/div[4]/button[2]') \
             .send_keys(Keys.ENTER)
         Intranet.navegador.implicitly_wait(10.0)
@@ -619,6 +539,8 @@ class Tracking:
         data_exped_ini = pd.to_datetime(relatorio['Expedicao'])  # puxa a data no formato yyyy-mm-dd
         data_exped = data_exped_ini.dt.strftime('%d/%m/%Y')  # formata para dd/mm/yyyy
         doc = relatorio['Doc']  # puxa em float
+        print('doc')
+        print(doc)
         doc_int = doc.astype(int)  # transforma float em int
 
         doc = doc_int
@@ -642,24 +564,20 @@ class Tracking:
 
     def importa_data_agenda(self):
         a = Intranet.gera_lista_ped_sem_agenda(self)
-        # df = Feedback.df()
         print(Feedback.dist)
         df = pd.read_excel(f'{teste_arquivo}', sheet_name=Feedback.aba_excel(self))
         relatorio = df[["Pedido", "Dt Agenda"]]  # considera todas as datas de agenda, inclusive as de nfs já entregues
         relatorio = relatorio.dropna(axis=0)  # exclui as células  vazias
-        print('Relatorio')
-        print(relatorio)
+        # print('Relatorio')
+        # print(relatorio)
         print('* * * * * * Importa Data De Agenda * * * * * *')
 
         data_agenda_ini = pd.to_datetime(relatorio['Dt Agenda'])  # puxa a data no formato yyyy-mm-dd
         data_agenda = data_agenda_ini.dt.strftime('%d/%m/%Y')  # formata para dd/mm/yyyy
         pdd = relatorio['Pedido']  # puxa em float
-        # print('*** PRINTA PEDIDO EM FLOAT ***')
-        # print(pdd, end='')
         pedido_int = pdd
 
         pedido_int = pedido_int.astype(int)  # transforma float em int
-        # print('*** PEDIDO CONVERTIDO EM INT *** ')
         pedido = pedido_int
         trk = zip(pedido, data_agenda)
         tracking = dict(trk).items()
@@ -682,8 +600,6 @@ class Tracking:
                 dicionario_temp.clear()  # limpa o dicionario
                 # temp
                 cont += 1
-
-        # print(dicionario)  # mostra os pedidos e datas localizados na planilha
         if cont == 0:
             print(f'\n{cont} pedidos localizados')
 
@@ -691,7 +607,6 @@ class Tracking:
 
     def importa_data_entrega(self):
         print('Classe: Tracking, Método: importa_data_entrega')
-
         Intranet.acessa_tela_tracking(self)  # importa a lista de nfs nao entregues
         a = Intranet.gera_lista_nfs_nao_entregues(self)  # trf a lst em var
         df = pd.read_excel(teste_arquivo,
@@ -705,7 +620,6 @@ class Tracking:
         doc = doc_int
         trk = zip(doc, data_entrega)
         tracking = dict(trk).items()
-        # print(tracking)
         cont = 0
         dicionario = {}
         for p, d in tracking:
@@ -716,7 +630,6 @@ class Tracking:
                     dicionario_temp.clear()  # limpa o dicionario temp
                     cont += 1
 
-        # print(dicionario)
         print(f'{cont} Datas de entrega localizadas')
         return dicionario
 
@@ -740,10 +653,10 @@ class Intranet(Feedback, object):
 
         Intranet.navegador.find_element('xpath',
                                         '/html/body/form/table/tbody/tr[2]/td/table/tbody/tr[2]/td[2]/input').send_keys(
-            'jean.lino@baruel.com.br')
+            senha)
         Intranet.navegador.find_element('xpath',
                                         '/html/body/form/table/tbody/tr[2]/td/table/tbody/tr[3]/td[2]/input').send_keys(
-            'Ma250509')
+            login)
         Intranet.navegador.find_element('xpath',
                                         '/html/body/form/table/tbody/tr[2]/td/table/tbody/tr[3]/td[2]/input').send_keys(
             Keys.ENTER)
@@ -803,10 +716,11 @@ class Intranet(Feedback, object):
 
         # acessar 'Customer Services'
         print('Acessa Customer Services')
+        sleep(2)
         Intranet.navegador.find_element('xpath', '//*[@id="navigation"]/ul/li[4]/a').click()
         # acessar Tracking
         print('Acessa Distribuidor')
-        print(f'Feedback.dist(self) >> {Feedback.dist(self)}')
+        # print(f'Feedback.dist(self) >> {Feedback.dist(self)}')
         Intranet.navegador.find_element('xpath', '//*[@id="navigation"]/ul/li[4]/ul/a[1]').click()
         # 1 > Extrema 2 > Alhandra
 
@@ -849,14 +763,11 @@ class Intranet(Feedback, object):
             mes_ini_formatado = f'0{dta_inicial.month}'
         else:
             mes_ini_formatado = dta_inicial.month
-
         Intranet.navegador.find_element('xpath', '//*[@id="calendario2"]').send_keys(Keys.CLEAR)
         Intranet.navegador.find_element('xpath', '//*[@id="calendario2"]').send_keys(dia_ini_formatado)
         Intranet.navegador.find_element('xpath', '//*[@id="calendario2"]').send_keys(mes_ini_formatado)
         Intranet.navegador.find_element('xpath', '//*[@id="calendario2"]').send_keys(dta_inicial.year)
-        Intranet.navegador.find_element('xpath', '/html/body/form[2]/table[3]/tbody/tr/td[1]/input').send_keys(
-            Keys.ENTER)
-
+        Intranet.navegador.find_element('xpath', '/html/body/form[2]/table[3]/tbody/tr/td[1]/input').send_keys(Keys.ENTER)
         nfs_nao_expedidas = []
         tr = 2
         try:
@@ -867,7 +778,6 @@ class Intranet(Feedback, object):
                 nf = col_nf
                 nf = int(nf)  # transforma em inteiro
                 tr += 1
-                # print(linha)
                 nfs_nao_expedidas.append(nf)  # insere na lista
 
         except:
@@ -911,8 +821,6 @@ class Intranet(Feedback, object):
                 Keys.ARROW_DOWN)
         Intranet.navegador.find_element('xpath',
                                         '//*[@id="navigation"]/ul/li[4]/ul/a[3]').click()  # clica em expedição/entrega
-        # /html/body/div[2]/ul/li[4]/ul/a[3]
-        # //*[@id="navigation"]/ul/li[4]/ul/a[3]
         # ACESSA TELA DE EXPEDIÇÃO
 
         Intranet.navegador.find_element('xpath','/html/body/form[2]/table[1]/tbody/tr[2]/td[9]/a').click()  # clica no botão 'expedição'
@@ -929,11 +837,8 @@ class Intranet(Feedback, object):
         cont_erro = 0
         cont_nfs_expedidas = 0
         for nf, data in tracking.items():
-            # print(f'{c} - {nf}: {data} ')
-
             data = data.replace("/", "")
             c += 1
-
             Intranet.navegador.find_element('xpath', '/html/body/form[2]/table[1]/tbody/tr[2]/td[2]/input').send_keys(
                 nf)
 
@@ -945,23 +850,27 @@ class Intranet(Feedback, object):
                 Keys.ENTER)
             cont_nfs_expedidas += 1
             # RELACIONA NFS COM ERRO NO LANÇAMENTO DA DATA DE EXPEDIÇÃO
-            alerta_erro = Intranet.navegador.find_element('xpath','/html/body/form[2]/div[2]').text
-            dta_emissao = Intranet.navegador.find_element('xpath', '/html/body/form[2]/table[2]/tbody/tr[2]/td[4]').text
+            try:
+                # /html/body/form[2]/div[2]/text()
+                alerta_erro = Intranet.navegador.find_element('xpath','/html/body/form[2]/div[2]').text
+                dta_emissao = Intranet.navegador.find_element('xpath', '/html/body/form[2]/table[2]/tbody/tr[2]/td[4]').text
 
-            if alerta_erro != '':
-                lista_temp = []
-                lista_temp.append(nf)
-                lista_temp.append(dta_emissao)
-                lista_temp.append(data)
-                lista_temp.append(alerta_erro)
-                lista_nfs_com_info_errada.append(lista_temp[:])
-                lista_temp.clear()
-                cont_erro += 1
-                cont_nfs_expedidas += 1
-            else:
+                if alerta_erro != '':
+                    lista_temp = []
+                    lista_temp.append(nf)
+                    lista_temp.append(dta_emissao)
+                    lista_temp.append(data)
+                    lista_temp.append(alerta_erro)
+                    lista_nfs_com_info_errada.append(lista_temp[:])
+                    lista_temp.clear()
+                    cont_erro += 1
+                    cont_nfs_expedidas += 1
+                else:
+                    pass
+                teste = lista_nfs_com_info_errada
+
+            except Exception as e:
                 pass
-            teste = lista_nfs_com_info_errada
-
 
         print(f"{cont_nfs_expedidas} datas processadas\n"
               f"{cont_erro} NF's com erro ")
@@ -1120,8 +1029,8 @@ class Intranet(Feedback, object):
         print(f'Regional {self.opcao_regional}')
         if self.opcao_regional == '1 - NORTE':
             print('teste ok')
-        else:
-            print('proximo passo')
+        # else:
+        #     print('proximo passo')
         ano = 2023
         cont_tr = 1
         c = 0
@@ -1215,31 +1124,47 @@ class Intranet(Feedback, object):
             Intranet.navegador.find_element('xpath', '/html/body/form[2]/table[1]/tbody/tr[2]/td[2]/input').send_keys(
                 nf)
             # data de entrega
+            # print(data)
+            #
+            # hoje = date.today()
+            # print(hoje)
+            # data_atual_dia = hoje.day
+            # data_atual_mes = hoje.month
+            # data_atual_ano = hoje.year
+            #
+            # # Printar o dia
+            # print(f"O dia atual é: {data_atual_dia}{data_atual_mes}{data_atual_ano}")
+            # input('>>>>>>TESTE INPUT DATA>>>>>>>>>>')
+
             Intranet.navegador.find_element('xpath', '//*[@id="calendario1"]').send_keys(data)
 
             #  grava
             Intranet.navegador.find_element('xpath', '/html/body/form[2]/table[1]/tbody/tr[2]/td[4]/input').send_keys(
                 Keys.ENTER)
-            dta_emissao = Intranet.navegador.find_element('xpath','/html/body/form[2]/table[2]/tbody/tr[2]/td[4]').text
-            alerta_erro = Intranet.navegador.find_element('xpath', '/html/body/form[2]/div[2]').text
 
-            # print(f'Alerta erro: {alerta_erro}')
-            if alerta_erro != '':
-                lista_temp = []
-                lista_temp.append(nf)
-                lista_temp.append(dta_emissao)
-                lista_temp.append(data)
-                lista_temp.append(alerta_erro)
-                lista_nfs_com_info_errada.append(lista_temp[:])
-                lista_temp.clear()
-                cont_erro += 1
-                cont_nfs_entregues += 1
+            try:
+                dta_emissao = Intranet.navegador.find_element('xpath','/html/body/form[2]/table[2]/tbody/tr[2]/td[4]').text
+                alerta_erro = Intranet.navegador.find_element('xpath', '/html/body/form[2]/div[2]').text
+                # print(f'Erro na linha 1240 dta_emissao: {dta_emissao} | alerta_erro {alerta_erro}  ')
+                # print(f'Alerta erro: {alerta_erro}')
+                if alerta_erro != '':
+                    lista_temp = []
+                    lista_temp.append(nf)
+                    lista_temp.append(dta_emissao)
+                    lista_temp.append(data)
+                    lista_temp.append(alerta_erro)
+                    lista_nfs_com_info_errada.append(lista_temp[:])
+                    lista_temp.clear()
+                    cont_erro += 1
+                    cont_nfs_entregues += 1
 
 
-            else:
+                else:
+                    pass
+                teste = lista_nfs_com_info_errada
+
+            except:
                 pass
-            teste = lista_nfs_com_info_errada
-
         print(f"{cont_nfs_entregues} datas processadas\n"
               f"{cont_erro} NF's com erro ")
 
@@ -1325,7 +1250,10 @@ class Intranet(Feedback, object):
         Intranet.navegador.find_element('xpath', '/html/body/form[2]/table[3]/tbody/tr/td[1]/input').send_keys(Keys.ENTER)
 
         # procurar linha a linha os numeros das NFS entregue no tracking e preencher, caso seja localizada
+        # avancar_manual()
+        Intranet.navegador.implicitly_wait(15)
         Intranet.navegador.find_element('xpath', '/html/body/form[2]/table[5]/tbody/tr[2]/td[8]')
+
         nfs_nao_entregues = []
         tr = 2
         try:
