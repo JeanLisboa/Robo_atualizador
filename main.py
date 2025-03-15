@@ -16,6 +16,17 @@ load_dotenv()  # Carrega as variáveis do .env
 senha = os.getenv("senha")
 senha_tsi = os.getenv('senha_tsi')
 login = os.getenv('login')
+contato_paulo = os.getenv('contato_paulo')
+contato_cleber = os.getenv('contato_cleber')
+contato_lucia = os.getenv('contato_lucia')
+contato_flavio_alexandre = os.getenv('contato_flavio_alexandre')
+contato_gualter = os.getenv('contato_gualter')
+contato_jeany = os.getenv('contato_jeany')
+contato_marlei = os.getenv('contato_marlei')
+contato_luana = os.getenv('contato_luana')
+contato_flavio_silva = os.getenv('contato_flavio_silva')
+
+
 
 class Feedback:
     print('Class Feedback')
@@ -143,7 +154,6 @@ class Feedback:
         ttk.Button(self.Labelframe_executar, text='OK', command=self.executar).grid(row=0, column=1, sticky='sw')
         ttk.Button(self.Labelframe_executar, text='Fechar', command=self.fechar).grid(row=0, column=2, sticky='sw')
         ttk.Button(self.Labelframe_executar,text='Gerar Tracking Consolidado', command=self.baixar_consolidado).grid(row=0, column=3, sticky='sw')
-        # ttk.Button(self.Labelframe_executar, text='Carteira', command=self.acessa_carteira).grid(row=0, column=3, sticky='sw')
         self.Labelframe_executar.pack(fill=BOTH, expand=True)
         ttk.Label(self.Labelframe_executar, text='Desenvolvido por Jean Lino', font=('arial', 9, "italic")).grid(row=2, column=0, stick='sw')
 
@@ -181,16 +191,14 @@ class Feedback:
         return a
 
     def selec_regional(self, *args):
-        # print('class: Feedback, método: selec_regional \n')
+        print('class: Feedback, método: selec_regional \n')
         a = self.opcao_regional.get()
-        # print(f'Regional {a} Selecionada')
         return a
 
     def selec_ano(self, *args):
         print('class: Feedback, método: selec_ano \n')
         a = self.opcao_ano.get()
         print(a)
-        # print(f'def selec_ano retorna: {a}')
         return a
 
     # def seleciona_vendedor(self, *args):
@@ -216,56 +224,55 @@ class Feedback:
         if a == '000671 MARLEI':
             cod_vend = '000671 MARLEI'
             msg_vend = str('Bom dia Marlei, tudo bem ?')
-            # contato = '+5581994447916'  # marlei 81994447916 >> luana   5571981075723
-            contato = '+5583993637279'
+
+            contato_marlei = contato_marlei
 
         if a == '000686 LUANA':
             cod_vend = '000686 LUANA'
             msg_vend = str('Bom dia Luana, tudo bem ?')
-            # contato = '+5571981075723'
-            contato = '+5583993637279'
+
+            contato_luana = contato_luana
 
         if a == '000669 FLAVIO SILVA':
             cod_vend = '000669 FLAVIO SILVA'
             msg_vend = str('Bom dia Flávio, tudo bem ?')
-            # contato = '+5531984034352'
-            contato = '+5583993637279'
+
+            contato_flavio_silva = contato_flavio_silva
 
         if a == '000508 JEANY':
             cod_vend = '000508 JEANY'
             msg_vend = str('Bom dia Jeany, tudo bem ?')
-            # contato = '+5584999811102'  # +5584999811102
-            contato = '+5583993637279'
+
+            contato_jeany = contato_jeany
 
         if a == '000595 GUALTER':
             cod_vend = '000595 GUALTER'
             msg_vend = str('Bom dia Gualter, tudo bem ?')
-            # contato = '+5582988110209'
-            contato = '+5583993637279'
+
+            contato_gualter = contato_gualter
 
         if a == '000656 FLAVIO':
             cod_vend = '000656 FLAVIO'
             msg_vend = str('Bom dia Flávio, tudo bem ?')
-            # contato = '+5585991239734'
-            contato = '+5583993637279'
+
+            contato_flavio_alexandre = contato_flavio_alexandre
 
         if a == '000641 LUCIA':
             cod_vend = '000641 LUCIA'
-            msg_vend = str('Bom dia Vanessa, tudo bem ?')
-            # contato = '+5583998072021'
-            contato = '+5583993637279'
+            msg_vend = str('Bom dia Lucia, tudo bem ?')
+
+            contato_lucia = contato_lucia
 
         if a == '000502 CLEBER':
             cod_vend = '000502 CLEBER'
             msg_vend = str('Bom dia Cléber, tudo bem ?')
-            # contato = '+5587996265806'
-            contato = '+5583993637279'
+            contato_cleber  = contato_lucia
 
         if a == '000654 PAULO BESERRA':
             cod_vend = '000654 PAULO BESERRA'
             msg_vend = str('Bom dia Paulo, tudo bem ?')
-            # contato = '+5586999773176'  #'+5586999773176'
-            contato = '+5583993637279'
+
+            contato_paulo = contato_paulo
 
         print(f' Cod vend: {cod_vend}')
         print(f'Contato: {contato}')
